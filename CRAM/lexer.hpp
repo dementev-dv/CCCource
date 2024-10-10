@@ -14,6 +14,7 @@ enum Tag {
   EQ,
   ERROR,
   END,
+  START,
   PLUS,
   MINUS
 };
@@ -70,6 +71,10 @@ class Lexer {
           id += in_[pos_];
           pos_++;
         }
+        if (id == "input")
+          return Token(INPUT, id);
+        if (id == "print")
+          return Token(PRINT, id);
         if(in_[pos_] == '[')
           arr_ = true;
         return Token(ID, id);
