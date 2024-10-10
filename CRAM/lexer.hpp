@@ -44,21 +44,17 @@ class Lexer {
   }
 
   Token Next() {
-    // std::cout << "case 1" << std::endl;
     while(pos_ < in_.size() && isspace(in_[pos_])) {
-      // std::cout << "case 2 " << in_[pos_] << std::endl;
       pos_++;
     }
 
     if (pos_ >= in_.size()) {
       return Token(END, "");
     }
-    // std::cout << "case 4 " << in_[pos_] << std::endl;
 
     char curr = in_[pos_];
 
     if (isdigit(curr)) {
-      // std::cout << "case 5 " << in_[pos_] << std::endl;
       std::string num;
       while (pos_ < in_.size() && isdigit(in_[pos_])) {
         num += in_[pos_];
@@ -68,13 +64,10 @@ class Lexer {
     }
 
     if (is_val_p(curr)) {
-      // std::cout << "case 6 " << in_[pos_] << std::endl;
       std::string id;
       if (isalpha(curr)) {
-        // std::cout << "case 7 " << in_[pos_] << std::endl;
         while(pos_ < in_.size() && isalpha(in_[pos_])) {
           id += in_[pos_];
-          // std::cout << "case 7 " << id << ' ' << in_[pos_] << std::endl;
           pos_++;
         }
         if(in_[pos_] == '[')
@@ -83,7 +76,6 @@ class Lexer {
       }
 
       if (curr == '[') {
-        // std::cout << "case 8 " << in_[pos_] << std::endl;
         char next = in_[++pos_];
         if (arr_) {
           arr_ = false;
