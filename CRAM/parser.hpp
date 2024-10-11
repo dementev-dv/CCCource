@@ -8,48 +8,17 @@ class Parser {
  public:
   Parser(Lexer& l)
     : lex_(l),
-      curr_(START, ""),
-      ast_(NULL, 0) {
+      curr_(START, "") {
   }
 
-  AST& Parse() {
+  AST Parse() {
     next();
-    Node* node = statement(NULL);
-    unsigned d = 1;
-
-    while(curr_.tag() != END) {
-      Node* tmp = node;
-      Binar* bin = new Binar(NULL, SEQ);
-      tmp->SetParent(node);
-      bin->op1 = tmp;
-      bin->op2 = statement(bin);
-      node = bin;
-      ++d;
-    }
-
-    ast_.SetRoot(node);
-    ast_.SetDepth(d);
-    return ast_;
+    return AST(stmtseq(NULL));
   }
-
-  void Dump(const char* path) {
-    Node* root = ast_.root();
-    if (!root) return;
-    std::ofstream out(path);
-    out << "digraph G {\n";
-    if (Unar* r = dynamic_cast<Unar*>(root)) r->Dump(out);
-    if (Binar* r = dynamic_cast<Binar*>(root)) r->Dump(out);
-    if (ConstLeaf* r = dynamic_cast<ConstLeaf*>(root)) r->Dump(out);
-    if (VarLeaf* r = dynamic_cast<VarLeaf*>(root)) r->Dump(out);
-    out << "}\n";
-    out.close();
-  }
-
 
  private:
   Lexer& lex_;
   Token curr_;
-  AST ast_;
 
   void expect(Tag tag) {
     if (curr_.tag() != tag) {
@@ -60,6 +29,19 @@ class Parser {
   }
 
   void next() { curr_ = lex_.Next(); }
+
+  Node* stmtseq(Node* parent) {
+    Node* node = statement(NULL);
+    if (curr_.tag() != END) {
+      Binar* seq = new Binar(NULL, SEQ);
+      node->SetParent(seq);
+      seq->op1 = node;
+      seq->op2 = stmtseq(seq);
+      node = seq;
+    }
+    node->SetParent(parent);
+    return node;
+  }
 
   Node* statement(Node* parent) {
     switch(curr_.tag()) {

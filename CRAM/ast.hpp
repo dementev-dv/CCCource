@@ -14,7 +14,7 @@ class Node {
   void SetParent(Node* parent) { parent_ = parent; }
 
  private:
-  Node* parent_;
+  Node* parent_;    // Do we really need whis???
 };
 
 class ConstLeaf final : public Node {
@@ -137,9 +137,8 @@ class Binar final : public Node {
 };
 
 struct AST {
-  AST(Node* root, unsigned d)
-    : root_(root),
-      depth_(d) {
+  AST(Node* root)
+    : root_(root) {
   }
 
   ~AST() {
@@ -148,12 +147,20 @@ struct AST {
 
   Node* root() { return root_; }
 
-  void SetRoot(Node* root) { root_ = root; }
-  void SetDepth(unsigned d) { depth_ = d; }
+  void Dump(const char* path) {
+    if (!root_) return;
+    std::ofstream out(path);
+    out << "digraph G {\n";
+    if (Unar* r = dynamic_cast<Unar*>(root_)) r->Dump(out);
+    if (Binar* r = dynamic_cast<Binar*>(root_)) r->Dump(out);
+    if (ConstLeaf* r = dynamic_cast<ConstLeaf*>(root_)) r->Dump(out);
+    if (VarLeaf* r = dynamic_cast<VarLeaf*>(root_)) r->Dump(out);
+    out << "}\n";
+    out.close();
+  }
 
  private:
   Node* root_;
-  unsigned depth_;
 };
 
 #endif // AST_HPP_

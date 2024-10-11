@@ -1,9 +1,14 @@
 # [RAM
 
 ## Statements:
-1) Присваивание: lvalue = expr;
-2) Ввод: input lvalue;
-3) Вывод: output expr;
+
+```EBNF
+AssignStmt -> lvalue = expr;
+InputStmt -> input lvalue;
+PrintStmt -> print expr;
+Stmt -> AssignStmt | InputStmt | PrintStmt
+StmtSequence -> Stmt StmtSequence | Stmt
+```
 
 ## Expressions:
 ```EBNF
@@ -18,21 +23,20 @@ value -> lvalue | num
 expr -> expr + value | expr - value | value
 ```
 
-Lvalue может быть 3 видов:
-1) Имя переменной из латинских букв, например "value", либо дословно лексема "][" либо дословно лексема "["
-2) Обращение к памяти вида name[expr], где name - имя состоящее из латинских букв, expr - любое допустимое выражение
-3) Обращение к памяти вида [expr] где expr - любое допустимое выражение
-
 
 # Результат работы парсера:
 
 Для программы
 
 ```
-input a;
+input [;
+x = 2;
 a[0] = 1;
 print a[0];
-[[ + ][ + 1] = 1;
+print ][;
+[[ + 1 + ][] = 2;
+print c + ][ + 1;
+print [c + x + 1];
 ```
 
 <image src="img/graph.png">
@@ -40,4 +44,3 @@ print a[0];
 # Формулировка задания:
 
 <image src="img/task.png">
-

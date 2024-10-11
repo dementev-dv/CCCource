@@ -16,9 +16,8 @@ class RunTime final {
   using MemTabIt = std::unordered_map<int, int>::iterator;
 
  public:
-  RunTime(Parser& parser) 
-    : parser_(parser),
-      ast_(parser_.Parse()) {
+  RunTime(AST& ast) 
+    : ast_(ast) {
   }
 
   int Run() {
@@ -29,9 +28,7 @@ class RunTime final {
  private:
   VarTab vars_;
   MemTab mem_;
-  Parser& parser_;
   AST& ast_;
-  Node* root_;
 
   int SetLvalue(Node* node, int val) {
     if (VarLeaf* leaf = dynamic_cast<VarLeaf*>(node)) {

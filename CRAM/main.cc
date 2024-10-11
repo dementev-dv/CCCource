@@ -27,15 +27,16 @@ print ][;
 [[ + 1 + ][] = 2;
 print c + ][ + 1;
 print [c + x + 1];
-print a[][];
 )";
 
   Lexer lexer(program);
   Parser parser(lexer);
-  RunTime rt(parser);
+
+  AST ast = parser.Parse();
+  RunTime rt(ast);
 
   rt.Run();
-  parser.Dump("graph.gv");
+  ast.Dump("graph.gv");
 
   return 0;
 
