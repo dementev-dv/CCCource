@@ -3,7 +3,7 @@
 ## Statements:
 
 ```EBNF
-AssignStmt -> lvalue = expr;
+AssignStmt -> lvalue \= expr;
 InputStmt -> input lvalue;
 PrintStmt -> print expr;
 Stmt -> AssignStmt | InputStmt | PrintStmt
