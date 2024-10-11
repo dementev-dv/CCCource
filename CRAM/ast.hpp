@@ -9,6 +9,8 @@ class Node {
     : parent_(p) {
   }
 
+  virtual ~Node() { }
+
   virtual void Dump(std::ofstream&) { }
 
   void SetParent(Node* parent) { parent_ = parent; }
@@ -61,8 +63,8 @@ class Unar final : public Node {
  public:
   Unar(Node* p, uType t)
     : Node(p),
-      type_(t),
-      op(NULL) {
+      op(NULL),
+      type_(t) {
   }
 
   ~Unar() {
@@ -101,9 +103,9 @@ class Binar final : public Node {
  public:
   Binar(Node* p, bType t)
     : Node(p),
-      type_(t),
       op1(NULL),
-      op2(NULL) {
+      op2(NULL),
+      type_(t) {
   }
 
   ~Binar() {

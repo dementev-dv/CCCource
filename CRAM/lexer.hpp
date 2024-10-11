@@ -40,10 +40,10 @@ class Token {
 class Lexer {
  public:
   Lexer(std::string input)
-    : in_(input),
-      arr_(false),
-      arrcnt_(0),
-      pos_(0) {
+    : arr_(false),
+      in_(input),
+      pos_(0),
+      arrcnt_(0) {
   }
 
   Token Next() {
