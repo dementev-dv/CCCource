@@ -6,6 +6,15 @@
 #include <iostream>
 #include <sstream>
 
+std::string readf(const char* path) {
+  std::ifstream f(path);
+  f.seekg(0, std::ios::end);
+  size_t size = f.tellg();
+  std::string s(size, ' ');
+  f.seekg(0);
+  f.read(&s[0], size);
+  return s;
+}
 
 int main(int argc, char** argv) {
 
@@ -14,20 +23,7 @@ int main(int argc, char** argv) {
     exit(1);
   }
 
-  std::ifstream in(argv[2]);
-  std::stringstream buf;
-  buf << in.rdbuf();
-
-  std::string program = R"(
-input [;
-x = 2;
-a[0] = 1;
-print a[0];
-print ][;
-[[ + 1 + ][] = 2;
-print c + ][ + 1;
-print [c + x + 1];
-)";
+  std::string program = readf(argv[1]);
 
   Lexer lexer(program);
   Parser parser(lexer);

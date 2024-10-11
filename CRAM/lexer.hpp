@@ -26,7 +26,7 @@ class Token {
   Token(Tag t, std::string v)
     : tag_(t),
       val_(v) {
-    std::cout << "Token " << v << std::endl;
+    // std::cout << "Token " << v << std::endl;
   }
 
   Tag tag() { return tag_; }
@@ -52,7 +52,7 @@ class Lexer {
     }
 
     if (pos_ >= in_.size()) {
-      std::cout << "END";
+      // std::cout << "END";
       return Token(END, "");
     }
 
