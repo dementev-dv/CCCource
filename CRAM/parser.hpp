@@ -8,33 +8,39 @@ class Parser {
  public:
   Parser(Lexer& l)
     : lex_(l),
-      root_(NULL),
-      curr_(START, "") {
+      curr_(START, ""),
+      ast_(NULL, 0) {
   }
 
-  void Parse() {
+  AST& Parse() {
     next();
     Node* node = statement(NULL);
+    unsigned d = 1;
+
     while(curr_.tag() != END) {
       Node* tmp = node;
       Binar* bin = new Binar(NULL, SEQ);
       tmp->SetParent(node);
       bin->op1 = tmp;
-      bin->op2 = statement(node);
+      bin->op2 = statement(bin);
       node = bin;
+      ++d;
     }
 
-    root_ = node;
+    ast_.SetRoot(node);
+    ast_.SetDepth(d);
+    return ast_;
   }
 
   void Dump(const char* path) {
-    if (!root_) return;
+    Node* root = ast_.root();
+    if (!root) return;
     std::ofstream out(path);
     out << "digraph G {\n";
-    if (Unar* r = dynamic_cast<Unar*>(root_)) r->Dump(out);
-    if (Binar* r = dynamic_cast<Binar*>(root_)) r->Dump(out);
-    if (ConstLeaf* r = dynamic_cast<ConstLeaf*>(root_)) r->Dump(out);
-    if (VarLeaf* r = dynamic_cast<VarLeaf*>(root_)) r->Dump(out);
+    if (Unar* r = dynamic_cast<Unar*>(root)) r->Dump(out);
+    if (Binar* r = dynamic_cast<Binar*>(root)) r->Dump(out);
+    if (ConstLeaf* r = dynamic_cast<ConstLeaf*>(root)) r->Dump(out);
+    if (VarLeaf* r = dynamic_cast<VarLeaf*>(root)) r->Dump(out);
     out << "}\n";
     out.close();
   }
@@ -42,12 +48,13 @@ class Parser {
 
  private:
   Lexer& lex_;
-  Node* root_;
   Token curr_;
+  AST ast_;
 
   void expect(Tag tag) {
     if (curr_.tag() != tag) {
       std::cout << "Unexpected token " << curr_.str() << std::endl;
+      std::cout << "Expected " << tag << std::endl;
       exit(1);      // Proper way to abort??
     }
   }
@@ -55,33 +62,48 @@ class Parser {
   void next() { curr_ = lex_.Next(); }
 
   Node* statement(Node* parent) {
-    if (curr_.tag() == INPUT) {
-      Unar* s = new Unar(parent, IN);
-      next();
-      s->op = lvalue(s);
-      expect(SEMICOL);
-      next();
-      return s;
+    switch(curr_.tag()) {
+      case INPUT:
+      {
+        Unar* s = new Unar(parent, IN);
+        next();
+        s->op = lvalue(s);
+        expect(SEMICOL);
+        next();
+        return s;
+      }
+
+      case PRINT:
+      {
+        Unar* s = new Unar(parent, OUT);
+        next();
+        s->op = expr(s);
+        expect(SEMICOL);
+        next();
+        return s;
+      }
+
+      case END:
+      case ERROR:
+        std::cout << "Parsing stmt error " << std::endl;
+        exit(1);
+      
+      default:
+      {
+        // Assignment statement or error
+        Binar* s = new Binar(parent, EQ);
+        s->op1 = lvalue(s);
+        expect(ASSIGN);
+        next();
+        s->op2 = expr(s);
+        expect(SEMICOL);
+        next();
+        return s;
+      }
     }
 
-    if (curr_.tag() == PRINT) {
-      Unar* s = new Unar(parent, OUT);
-      next();
-      s->op = expr(s);
-      expect(SEMICOL);
-      next();
-      return s;
-    }
-
-    // Assignment statement or error
-    Binar* s = new Binar(parent, EQ);
-    s->op1 = lvalue(s);
-    expect(ASSIGN);
-    next();
-    s->op2 = expr(s);
-    expect(SEMICOL);
-    next();
-    return s;
+    std::cout << "Unreachable" << std::endl;
+    exit(1);
   }
 
   Node* lvalue(Node* parent) {
@@ -118,7 +140,7 @@ class Parser {
       }
 
       default:
-        std::cout << "Expected value, but got " << curr_.str() << " token" << std::endl;
+        std::cout << "Expected lvalue, but got " << curr_.str() << " token" << std::endl;
         exit(1);
     }
     return NULL;

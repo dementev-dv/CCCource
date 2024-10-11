@@ -1,0 +1,49 @@
+digraph G {
+	peak0x600001f403c0 [label = "stmt sequence"]
+		peak0x600001f403c0 -> peak0x600001f40330
+		peak0x600001f403c0 -> peak0x600001f403f0
+	peak0x600001f40330 [label = "stmt sequence"]
+		peak0x600001f40330 -> peak0x600001f40270
+		peak0x600001f40330 -> peak0x600001141260
+	peak0x600001f40270 [label = "stmt sequence"]
+		peak0x600001f40270 -> peak0x6000011411e0
+		peak0x600001f40270 -> peak0x600001f40240
+	peak0x6000011411e0 [label = "input"]
+		peak0x6000011411e0 -> peak0x600001f402d0
+	peak0x600001f402d0 [label = "a"]
+	peak0x600001f40240 [label = "="]
+		peak0x600001f40240 -> peak0x600001141200
+		peak0x600001f40240 -> peak0x600001141240
+	peak0x600001141200 [label = "REF"]
+		peak0x600001141200 -> peak0x600001f40300
+	peak0x600001f40300 [label = "+"]
+		peak0x600001f40300 -> peak0x600001f402a0
+		peak0x600001f40300 -> peak0x600001141220
+	peak0x600001f402a0 [label = "a"]
+	peak0x600001141220 [label = "0"]
+	peak0x600001141240 [label = "1"]
+	peak0x600001141260 [label = "print"]
+		peak0x600001141260 -> peak0x600001141280
+	peak0x600001141280 [label = "REF"]
+		peak0x600001141280 -> peak0x600001f40390
+	peak0x600001f40390 [label = "+"]
+		peak0x600001f40390 -> peak0x600001f40360
+		peak0x600001f40390 -> peak0x6000011412a0
+	peak0x600001f40360 [label = "a"]
+	peak0x6000011412a0 [label = "0"]
+	peak0x600001f403f0 [label = "="]
+		peak0x600001f403f0 -> peak0x6000011412c0
+		peak0x600001f403f0 -> peak0x600001141300
+	peak0x6000011412c0 [label = "REF"]
+		peak0x6000011412c0 -> peak0x600001f404b0
+	peak0x600001f404b0 [label = "-"]
+		peak0x600001f404b0 -> peak0x600001f40450
+		peak0x600001f404b0 -> peak0x6000011412e0
+	peak0x600001f40450 [label = "-"]
+		peak0x600001f40450 -> peak0x600001f40420
+		peak0x600001f40450 -> peak0x600001f40480
+	peak0x600001f40420 [label = "c"]
+	peak0x600001f40480 [label = "x"]
+	peak0x6000011412e0 [label = "1"]
+	peak0x600001141300 [label = "1"]
+}

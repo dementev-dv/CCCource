@@ -94,7 +94,7 @@ enum bType {
   ADD,        // Should we have the same names as in Token type enum??
   SUB,
   EQ,         // Should we have different classes for stmt and expr??
-  SEQ
+  SEQ // sequence of statements
 };
 
 class Binar final : public Node {
@@ -134,6 +134,26 @@ class Binar final : public Node {
 
  private:
   bType type_;
+};
+
+struct AST {
+  AST(Node* root, unsigned d)
+    : root_(root),
+      depth_(d) {
+  }
+
+  ~AST() {
+    delete root_;
+  }
+
+  Node* root() { return root_; }
+
+  void SetRoot(Node* root) { root_ = root; }
+  void SetDepth(unsigned d) { depth_ = d; }
+
+ private:
+  Node* root_;
+  unsigned depth_;
 };
 
 #endif // AST_HPP_

@@ -1,5 +1,6 @@
 #include "lexer.hpp"
 #include "parser.hpp"
+#include "runtime.hpp"
 
 #include <fstream>
 
@@ -13,9 +14,11 @@ int main() {
 
   Lexer lexer(program);
   Parser parser(lexer);
-  
-  parser.Parse();
+  RunTime rt(parser);
+
+  rt.Run();
   parser.Dump("graph.gv");
+
   return 0;
 
 }

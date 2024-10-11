@@ -6,19 +6,19 @@
 
 
 enum Tag {
-  ID,
-  NUM,
-  LBRACK,
-  RBRACK,
-  SEMICOL,
-  INPUT,
-  PRINT,
-  ASSIGN,
-  ERROR,
-  END,
-  START,
-  PLUS,
-  MINUS
+  ID = 0,
+  NUM = 1,
+  LBRACK = 2,
+  RBRACK = 3,
+  SEMICOL = 4,
+  INPUT = 5,
+  PRINT = 6,
+  ASSIGN = 7,
+  ERROR = 8,
+  END = 9,
+  START = 10,
+  PLUS = 11,
+  MINUS = 12
 };
 
 class Token {
@@ -26,7 +26,7 @@ class Token {
   Token(Tag t, std::string v)
     : tag_(t),
       val_(v) {
-    // std::cout << "Token " << v << std::endl;
+    std::cout << "Token " << v << std::endl;
   }
 
   Tag tag() { return tag_; }
@@ -52,6 +52,7 @@ class Lexer {
     }
 
     if (pos_ >= in_.size()) {
+      std::cout << "END";
       return Token(END, "");
     }
 
