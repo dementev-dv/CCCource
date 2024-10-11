@@ -11,7 +11,7 @@ enum Tag {
   SEMICOL,
   INPUT,
   OUTPUT,
-  EQ,
+  ASSIGN,
   ERROR,
   END,
   START,
@@ -28,6 +28,7 @@ class Token {
   }
 
   Tag tag() { return tag_; }
+  std::string str() { return val_; }
 
  private:
   Tag tag_;
