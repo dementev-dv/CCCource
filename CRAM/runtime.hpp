@@ -38,8 +38,6 @@ class RunTime final {
       VarTabIt it = vars_.find(leaf->name());
       if (it != vars_.end())
         vars_.erase(it);
-      else
-        std::cout << "Referencing unset variable " << leaf->name() << " returned 0 value" << std::endl; 
       vars_.emplace(leaf->name(), val);
       return val;
     }
@@ -53,8 +51,6 @@ class RunTime final {
       MemTabIt it = mem_.find(addr);
       if (it != mem_.end())
         mem_.erase(it);
-      else
-        std::cout << "Referencing unset memory addr [" << addr << "] returned 0 value" << std::endl; 
       mem_.emplace(addr, val);
       return val;
     }
@@ -66,8 +62,11 @@ class RunTime final {
   int Count(Node* node) {
     if (VarLeaf* var = dynamic_cast<VarLeaf*>(node)) {
       VarTabIt it = vars_.find(var->name());
-      if (it == vars_.end())
+      if (it == vars_.end()) {
+        std::cout << "Referencing unset variable " << var->name() << " returned 0 value" << std::endl;
+        vars_.emplace(var->name(), 0);
         return 0;
+      }
       return it->second;
     }
 
@@ -83,6 +82,7 @@ class RunTime final {
           int val;
           std::cin >> val;
           SetLvalue(op, val);
+          return val;
         }
         
         case OUT:
@@ -98,6 +98,7 @@ class RunTime final {
           MemTabIt it = mem_.find(addr);
           if (it == mem_.end()) {
             mem_.emplace(addr, 0);
+            std::cout << "Warning: referencing unset memory addr [" << addr << "] returned 0 value" << std::endl; 
             return 0;
           }
           return it->second;
@@ -115,8 +116,12 @@ class RunTime final {
 
       switch(bin->type()) {
         case ADD:
+        // std::cout << "op1 = " << Count(op1);
+        // std::cout << "op2 = " << Count(op2);
           return Count(op1) + Count(op2);
         case SUB:
+        // std::cout << "op1 = " << Count(op1);
+        // std::cout << "op2 = " << Count(op2);
           return Count(op1) - Count(op2);
 
         case EQ:
@@ -139,7 +144,7 @@ class RunTime final {
       }
     }
 
-    std::cout << "Unreachable1" << std::endl;
+    std::cout << "Unreachable" << std::endl;
     exit(1);
   }
 };

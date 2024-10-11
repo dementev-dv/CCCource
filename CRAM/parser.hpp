@@ -84,8 +84,10 @@ class Parser {
       }
 
       case END:
+        std::cout << "Parsing stmt END " << std::endl;
+        exit(1);
       case ERROR:
-        std::cout << "Parsing stmt error " << std::endl;
+        std::cout << "Parsing stmt ERROR " << std::endl;
         exit(1);
       
       default:
@@ -179,7 +181,7 @@ class Parser {
       }
       if (curr_.tag() == PLUS) {
         Node* tmp = node;
-        Binar* bin = new Binar(NULL, SUB);
+        Binar* bin = new Binar(NULL, ADD);
         bin->op1 = tmp;
         tmp->SetParent(bin);
         next();
