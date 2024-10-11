@@ -1,9 +1,20 @@
 # [RAM
 
+## Make and run
+
+```shell
+cmake . -B build
+cmake --build build -j
+
+# Write your code to input.ram file
+
+./build/ram input.ram
+```
+
 ## Statements:
 
 ```EBNF
-AssignStmt -> lvalue \= expr;
+AssignStmt -> lvalue = expr;
 InputStmt -> input lvalue;
 PrintStmt -> print expr;
 Stmt -> AssignStmt | InputStmt | PrintStmt
