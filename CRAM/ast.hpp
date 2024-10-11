@@ -69,12 +69,15 @@ class Unar final : public Node {
     if (op) delete op;
   }
 
+  uType type() { return type_; }
+
   void Dump(std::ofstream& out) {
     out << "\tpeak" << this << " [label = \"";
     switch(type_) {
       case IN:  out << "input"; break;
       case OUT: out << "print"; break;
       case REF: out << "REF"; break;
+      default:  out << "UNKNOWN"; break;
     }
     out << "\"]\n";
     out << "\t\tpeak" << this << " -> peak" << op << "\n";
@@ -108,6 +111,8 @@ class Binar final : public Node {
     if (op2) delete op2;
   }
 
+  bType type() { return type_; }
+
   void Dump(std::ofstream& out) {
     out << "\tpeak" << this << " [label = \"";
     switch(type_) {
@@ -115,6 +120,7 @@ class Binar final : public Node {
       case SUB: out << "-"; break;
       case EQ:  out << "="; break;
       case SEQ: out << "stmt sequence"; break;
+      default:  out << "unknown"; break;
     }
     out << "\"]\n";
     out << "\t\tpeak" << this << " -> peak" << op1 << "\n";
