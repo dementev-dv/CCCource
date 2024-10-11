@@ -1,6 +1,8 @@
+#ifndef LEXER_HPP_
+#define LEXER_HPP_
+
 #include <iostream>
 #include <string>
-#include <vector>
 
 
 enum Tag {
@@ -10,7 +12,7 @@ enum Tag {
   RBRACK,
   SEMICOL,
   INPUT,
-  OUTPUT,
+  PRINT,
   ASSIGN,
   ERROR,
   END,
@@ -24,7 +26,7 @@ class Token {
   Token(Tag t, std::string v)
     : tag_(t),
       val_(v) {
-    std::cout << "Token " << v << std::endl;
+    // std::cout << "Token " << v << std::endl;
   }
 
   Tag tag() { return tag_; }
@@ -42,7 +44,6 @@ class Lexer {
       arr_(false),
       arrcnt_(0),
       pos_(0) {
-    std::cout << "Lexer " << input << std::endl;
   }
 
   Token Next() {
@@ -106,7 +107,7 @@ class Lexer {
 
     ++pos_;
     switch(curr) {
-      case '=': return Token(EQ, "=");
+      case '=': return Token(ASSIGN, "=");
       case '+': return Token(PLUS, "+");
       case '-': return Token(MINUS, "-");
       case ';': return Token(SEMICOL, ";");
@@ -128,3 +129,5 @@ class Lexer {
   unsigned pos_;
   unsigned arrcnt_;
 };
+
+#endif // LEXER_HPP_

@@ -1,13 +1,15 @@
 #ifndef AST_HPP_
 #define AST_HPP_
 
+#include <fstream>
+
 class Node {
  public:
   Node(Node* p)
     : parent_(p) {
   }
 
-  virtual void Dump();
+  virtual void Dump(std::ofstream&) { }
 
   void SetParent(Node* parent) { parent_ = parent; }
 
@@ -24,8 +26,8 @@ class ConstLeaf final : public Node {
   
   unsigned val() { return val_; }
 
-  void Dump(std::ofstream out) {
-    out << "peak" << this << "label[\"" << val_ << "\"]\n";
+  void Dump(std::ofstream& out) {
+    out << "\tpeak" << this << " [label = \"" << val_ << "\"]\n";
   }
 
  private:
@@ -41,23 +43,23 @@ class VarLeaf final : public Node {
 
   std::string name() { return name_; }
 
-  void Dump(std::ofstream out) {
-    out << "peak" << this << "label[\"" << name_ << "\"]\n";
+  void Dump(std::ofstream& out) {
+    out << "\tpeak" << this << " [label = \"" << name_ << "\"]\n";
   }
 
  private:
   std::string name_;
 };
 
+enum uType {
+  IN,
+  OUT,
+  REF
+};
+
 class Unar final : public Node {
  public:
-  enum uType {
-    IN,
-    OUT,
-    REF
-  }
-
-  Unar(Node* p, ioType t)
+  Unar(Node* p, uType t)
     : Node(p),
       type_(t),
       op(NULL) {
@@ -67,16 +69,16 @@ class Unar final : public Node {
     if (op) delete op;
   }
 
-  void Dump(std::ofstream out) {
-    out << "peak" << this << " [label = \"";
+  void Dump(std::ofstream& out) {
+    out << "\tpeak" << this << " [label = \"";
     switch(type_) {
-      case IN:  out << "input";
-      case OUT: out << "print";
-      case REF: out << "REF";
+      case IN:  out << "input"; break;
+      case OUT: out << "print"; break;
+      case REF: out << "REF"; break;
     }
-    out << "\"]\n"
-    out << "peak" << this << " -> peak" << op << "\n";
-    op->Dump();
+    out << "\"]\n";
+    out << "\t\tpeak" << this << " -> peak" << op << "\n";
+    op->Dump(out);
   }
 
   Node* op;
@@ -85,15 +87,15 @@ class Unar final : public Node {
   uType type_;
 };
 
+enum bType {
+  ADD,        // Should we have the same names as in Token type enum??
+  SUB,
+  EQ,         // Should we have different classes for stmt and expr??
+  SEQ
+};
+
 class Binar final : public Node {
  public:
-  enum bType {
-    ADD,        // Should we have the same names as in Token type enum??
-    SUB,
-    EQ,         // Should we have different classes for stmt and expr??
-    SEQ
-  };
-
   Binar(Node* p, bType t)
     : Node(p),
       type_(t),
@@ -106,19 +108,19 @@ class Binar final : public Node {
     if (op2) delete op2;
   }
 
-  void Dump() {
-    out << "peak" << this << " [label = \"";
+  void Dump(std::ofstream& out) {
+    out << "\tpeak" << this << " [label = \"";
     switch(type_) {
-      case ADD: out << "+ ";
-      case SUB: cout << "- ";
-      case EQ:  out << "= ";
-      case SEQ: out << "stmt sequence";
+      case ADD: out << "+"; break;
+      case SUB: out << "-"; break;
+      case EQ:  out << "="; break;
+      case SEQ: out << "stmt sequence"; break;
     }
-    out << "\"]\n"
-    out << "peak" << this << " -> peak" << op1 << "\n";
-    out << "peak" << this << " -> peak" << op2 << "\n";
-    op1->Dump();
-    op2->Dump();
+    out << "\"]\n";
+    out << "\t\tpeak" << this << " -> peak" << op1 << "\n";
+    out << "\t\tpeak" << this << " -> peak" << op2 << "\n";
+    op1->Dump(out);
+    op2->Dump(out);
   }
 
   Node* op1;
