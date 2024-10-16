@@ -6,4 +6,3 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS "-Wall -Wpedantic -Wextra")
 
 add_executable(ram main.cc)
-

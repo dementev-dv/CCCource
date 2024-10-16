@@ -16,7 +16,7 @@ class Node {
   void SetParent(Node* parent) { parent_ = parent; }
 
  private:
-  Node* parent_;    // Do we really need whis???
+  Node* parent_;    // Do we really need this???
 };
 
 class ConstLeaf final : public Node {
